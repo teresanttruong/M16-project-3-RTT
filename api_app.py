@@ -3,7 +3,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from flask_sqlalchemy import SQLAlchemy 
-from flask import Flask
+from flask import Flask, render_template
 import os.path
 
 
@@ -74,18 +74,22 @@ def welcome():
 #Display restaurants database, creating a bullet point for each restaurant
 #see restaurant_index.html for formatting of table
 def data():
-    try:
-        restaurants = Restaurants.query.all()
-        restaurants_text = '<ul>'
-        for restaurant in restaurants:
-            restaurants_text += '<li>' + restaurant.id + ', ' + restaurant.dataAdded + ', ' + restaurant.dateUpdated + ', ' + restaurant.address + ', ' + restaurant.categories + ', ' + restaurant.primaryCategories + ', ' + restaurant.city + ', ' + restaurant.country + ', ' + restaurant.keys + ', ' + restaurant.latitude + ', ' + restaurant.longitude + ', ' + restaurant.name + ', ' + restaurant.postalCode + ', ' + restaurant.province + ', ' + restaurant.sourceURLs + ', ' + restaurant.websites + '</li>'
-        restaurants_text += '</ul>'
-        return restaurants_text
-    except Exception as e:
-        # e holds description of the error
-        error_text = "<p>The error:<br>" + str(e) + "</p>"
-        hed = '<h1>Something is broken.</h1>'
-        return hed + error_text
+    restaurants = Restaurants.query.all()
+    return render_template('restaurant_data_index.html', restaurants=restaurants)
+
+    
+    # try:
+    #     restaurants = Restaurants.query.all()
+    #     restaurants_text = '<ul>'
+    #     for restaurant in restaurants:
+    #         restaurants_text += '<li>' + restaurant.id + ', ' + restaurant.dataAdded + ', ' + restaurant.dateUpdated + ', ' + restaurant.address + ', ' + restaurant.categories + ', ' + restaurant.primaryCategories + ', ' + restaurant.city + ', ' + restaurant.country + ', ' + restaurant.keys + ', ' + restaurant.latitude + ', ' + restaurant.longitude + ', ' + restaurant.name + ', ' + restaurant.postalCode + ', ' + restaurant.province + ', ' + restaurant.sourceURLs + ', ' + restaurant.websites + '</li>'
+    #     restaurants_text += '</ul>'
+    #     return restaurants_text
+    # except Exception as e:
+    #     # e holds description of the error
+    #     error_text = "<p>The error:<br>" + str(e) + "</p>"
+    #     hed = '<h1>Something is broken.</h1>'
+    #     return hed + error_text
     
     
 #Run app

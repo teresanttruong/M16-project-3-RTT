@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>US Restaurants</title>
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" type="text/css" href="static/restaurant_style.css">
+</head>
+
+<body>
+
+  <!-- The div that holds our database -->
+<div>
+
+  <h1 id="db">US Fast Food Restaurants</h1>
+
+      <p>from the "Fast Food Restaurants Across America" dataset from Datafiniti on kaggle.com</p>
+
+      <table class="table">
+          <tr>
+                <th>ID</th>
+                <th>Date Added</th>
+                <th>Date Updated</th>
+                <th>Address</th>
+                <th>Categories</th>
+                <th>Primary Categories</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Keys</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Name</th>
+                <th>Postal Code</th>
+                <th>Province</th>
+                <th>Source URLs</th>
+                <th>Websites</th>
+          </tr>
+
+          <!-- here is a for-loop to give us all the restaurants -->
+          {% for restaurant in restaurants %}
+          <tr>
+                <td>{{ restaurant.id }}</td>
+                <td>{{ restaurant.dataAdded }}</td>
+                <td>${{ restaurant.dateUpdated}}</td>
+                <td>{{ restaurant.address }}</td>
+                <td>{{ restaurant.categories }}</td>
+                <td>{{ restaurant.primaryCategories }}</td>
+                <td>{{ restaurant.city }}</td>
+                <td>{{ restaurant.country }}</td>
+                <td>{{ restaurant.keys }}</td>
+                <td>{{ restaurant.latitude }}</td>
+                <td>{{ restaurant.longitude }}</td>
+                <td>{{ restaurant.name }}</td>
+                <td>{{ restaurant.postalCode }}</td>
+                <td>{{ restaurant.province }}</td>
+                <td>{{ restaurant.sourceURLs }}</td>
+                <td>{{ restaurant.websites }}</td>
+
+          </tr>
+          {% endfor %}
+      </table>
+
+</div>
+
+</body>
+</html>
