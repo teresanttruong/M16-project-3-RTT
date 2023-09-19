@@ -3,17 +3,21 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from flask_sqlalchemy import SQLAlchemy 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import os.path
-
+import sqlite3
+from flask import Flask
+from flask_cors import CORS
 
 #Database Setup
 engine = create_engine("sqlite:///data/restaurants.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
+
 # reflect the tables
 Base.prepare(autoload_with=engine)
+
 # Save references to each table
 # Restaurants = Base.classes.restaurants
 # Create our session (link) from Python to the DB
@@ -25,7 +29,11 @@ db = SQLAlchemy()
 
 app = Flask(__name__)
 
-db_name = "C:/Users/victo/Documents/Bootcamp/Week16/M16-project-3-RTT/data/restaurants.sqlite"
+
+
+CORS(app)
+
+db_name = "data/restaurants.sqlite"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, db_name)
 
@@ -39,6 +47,7 @@ db.init_app(app)
 #Create class for restaurants table
 class Restaurants(db.Model):
     __tablename__ = 'restaurants'
+    
     id = db.Column(db.String, primary_key=True)
     dataAdded = db.Column(db.String)
     dateUpdated = db.Column(db.String)
@@ -56,6 +65,26 @@ class Restaurants(db.Model):
     sourceURLs = db.Column(db.String)
     websites = db.Column(db.String)
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'dataAdded': self.dataAdded,
+            'dateUpdated': self.dateUpdated,
+            'address': self.address,
+            'categories': self.categories,
+            'primaryCategories': self.primaryCategories,
+            'city': self.city,
+            'country': self.country,
+            'keys': self.keys,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'name': self.name,
+            'postalCode': self.postalCode,
+            'province': self.province,
+            'sourceURLs': self.sourceURLs,
+            'websites': self.websites
+        }
+
 
 #Flask Routes
 @app.route("/")
@@ -65,6 +94,7 @@ def welcome():
         f"Available routes:<br/>"
         f"/map<br/>"
         f"/data<br/>"
+        f"/get_data<br/>"
     )
     
 # @app.route("/map")
@@ -77,6 +107,11 @@ def data():
     restaurants = Restaurants.query.all()
     return render_template('restaurant_data_index.html', restaurants=restaurants)
 
+@app.route("/get_data")
+def get_data():
+    restaurants = Restaurants.query.all()
+    serialized_data = [restaurant.as_dict() for restaurant in restaurants]
+    return jsonify(Restaurant=serialized_data)
     
     # try:
     #     restaurants = Restaurants.query.all()
@@ -95,3 +130,29 @@ def data():
 #Run app
 if __name__ == '__main__':
     app.run()
+
+#     from flask import Flask, jsonify
+# import sqlite3
+
+# app = Flask(__name__)
+
+# @app.route('/get_data', methods=['GET'])
+# def get_data():
+#     # Connect to the SQLite database
+#     conn = sqlite3.connect('restaurants.db')
+#     cursor = conn.cursor()
+
+#     # Execute a query to fetch the data (replace with your query)
+#     cursor.execute('SELECT * FROM restaurants')
+#     data = cursor.fetchall()
+
+#     # Convert data to a list of dictionaries for easier JSON serialization
+#     data_list = [{'lat': row[0], 'lon': row[1], 'name': row[2]} for row in data]
+
+#     # Close the database connection
+#     conn.close()
+
+#     return jsonify(data_list)
+
+# if __name__ == '__main__':
+#     app.run()
