@@ -1,83 +1,151 @@
 // Establish link to CSV Data
 let url = 'http://127.0.0.1:5000/get_data' // or link csv file
 
-d3.json(url).then(data => {console.log(data);})
 
-// // Create base map and layer to hold restaurant markers
-// function createMap(restaurants) {
+// Create base map and layer to hold restaurant markers
+function createMap(restaurants) {
 
-//   let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//     attribution: '&copy; OpenStreetMap contributors'
-//   });
+  let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  });
 
-//   let baseMaps = {
-//       "Street Map": streetmap
-//     };
+  let baseMaps = {
+      "Street Map": streetmap
+    };
 
-//   let overlayMaps = {
-//       "Restaurants in America": restaurants
-//     };
+  let overlayMaps = {
+      "Burger Joints": burger,
+      "Hot Dogs" : hotdogs,
+      "Ice Cream Shops" : icecream,
+      "Sandwich Shops" : sandwich,
+      "Breakfast Spots" : breakfast,
+      "Chicken Joints" : chicken,
+      "Pizza Shops" : pizza,
+      "Mexican Restaurants" : mex
+    };
 
-//   let map = L.map("map", {
-//       center: [39.83, -98.58],
-//       zoom: 5,
-//       layers: [streetmap, restaurants]
-//     })
+  let map = L.map("map", {
+      center: [39.83, -98.58],
+      zoom: 5,
+      layers: [streetmap, burger, hotdogs, icecream, sandwich, breakfast, chicken, pizza, mex] 
+    })
 
-//   let legend = L.control({position: 'bottomleft'});
-//   legend.onAdd = function () {
-//         let div = L.DomUtil.create("div", "info legend");
+  let legend = L.control({position: 'bottomleft'});
+  legend.onAdd = function () {
+        let div = L.DomUtil.create("div", "info legend");
+        
+        div.innerHTML = '<strong>Legend</strong><br>';
+        div.style.backgroundColor = 'white';
+        div.style.padding = '10px';
+        div.style.borderRadius = '5px';
+        div.style.boxShadow = '0 1px 5px rgba(0, 0, 0, 0.4)';
+
+        let types = ["Burger Joints",
+                    "Hot Dogs",
+                    "Ice Cream Shops",
+                    "Sandwich Shops",
+                    "Breakfast Spots",
+                    "Chicken Joints",
+                    "Pizza Shops",
+                    "Mexican Restaurants"];
+
+        let icons = ['map_icons/hamburger.png',
+                    'map_icons/hotdog.png',
+                    'map_icons/icecream.png',
+                    'map_icons/sandwich.png',
+                    'map_icons/breakfast.png',
+                    'map_icons/chicken.png',
+                    'map_icons/pizza.png',
+                    'map_icons/mexican.png'];
     
-//         let grades = [];
-//         let colors = [];
+        // Loop through our intervals and generate a label with a colored square for each interval.
+        for (let i = 0; i < types.length; i++) {
+          div.innerHTML +=  (" <img src="+ icons[i] +" height='20' width='20'>  " ) + types[i] +'<br>';
+        }
+        return div;
+      };
+
+  legend.addTo(map)
     
-//         // Loop through our intervals and generate a label with a colored square for each interval.
-//         for (let i = 0; i < grades.length; i++) {
-//           div.innerHTML += "<i style='background: "
-//             + colors[i]
-//             + "'></i> "
-//             + grades[i]
-//             + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
-//         }
-//         return div;
-//       }
-//   legend.addTo(map)
+  L.control.layers(baseMaps, {
+      collapsed: false
+  }).addTo(map);
+
+}
+
+// Determine marker icon
+function chooseIcon(categories) {
+    switch (true) {
+        case /Hamburger/.test(categories):
+            return 'map_icons/hamburger.png'
+            console.log("• Matched 'Hamburger' test");
+            break;
+
+        case /Hot Dogs/.test(categories):
+            return 'map_icons/hotdog.png'
+            console.log("• Matched 'hotdog' test");
+            break;
+
+        case /Ice Cream/.test(categories):
+            return 'map_icons/icecream.png'
+            console.log("• Matched 'icecream' test");
+            break;
+
+        case /Sandwich/.test(categories):
+            return 'map_icons/sandwich.png'
+            console.log("• Matched 'sandwich' test");
+            break;    
     
-//   L.control.layers(baseMaps, overlayMaps, {
-//       collapsed: false
-//   }).addTo(map);
-// }
+        case /Breakfast/.test(categories):
+            return 'map_icons/breakfast.png'
+            console.log("• Matched 'breakfast' test");
+            break;
 
-// // Determine marker color
-// function chooseColor(categories) {
-// }
+        case /Chicken/.test(categories):
+            return 'map_icons/chicken.png'
+            console.log("• Matched 'chicken' test");
+            break;
 
-// // Create Restaurant markers
-// function createMarkers(response) {
-//   let recordedRestaurants = response.features;
-//   let restaurantMarkers = []
+        case /Pizza/.test(categories):
+            return 'map_icons/pizza.png'
+            console.log("• Matched 'pizza' test");
+            break;
 
-//   for (let index = 0; index < recordedRestaurants.length; index++) {
-//       let restaurant = recordedRestaurants[index]
+        case /Mexican/.test(categories):
+            return 'map_icons/mexican.png'
+            console.log("• Matched 'mexican' test");
+            break;
 
-//       let restaurantMarker = L.circle([restaurant.geometry.coordinates[1],restaurant.geometry.coordinates[0]], {
-//           fillOpacity: 0.25,
-//           //Color is based on Type of Restaurant
-//           color: chooseColor(restaurant.geometry.coordinates[2]),
-//           fillColor: chooseColor(restaurant.geometry.coordinates[2]),
-//       })
-//       //Create popup that includes location, depth, and magnitude
-//       .bindPopup(`<h2>Location: ${restaurant.properties.place}</h2> <hr> 
-//                   <h3>Depth: ${restaurant.geometry.coordinates[2]} <br>
-//                       Magnitude: ${restaurant.properties.mag}</h3>`)
+        default: return 'gray'
+    }
+}
 
-//       restaurantMarkers.push(restaurantMarker)
-//   }
+// Create Restaurant markers
+function createMarkers(response) {
+  let recordedRestaurants = response.features;
+  let restaurantMarkers = []
 
-//   createMap(L.layerGroup(restaurantMarkers))
-// }
+  for (let index = 0; index < recordedRestaurants.length; index++) {
+      let restaurant = recordedRestaurants[index]
 
+      let restaurantMarker = L.circle([restaurant.geometry.coordinates[1],restaurant.geometry.coordinates[0]], {
+          fillOpacity: 0.25,
+          //Color is based on Type of Restaurant
+          color: chooseColor(restaurant.geometry.coordinates[2]),
+          fillColor: chooseColor(restaurant.geometry.coordinates[2]),
+      })
+      //Create popup that includes location, depth, and magnitude
+      .bindPopup(`<h2>Location: ${restaurant.properties.place}</h2> <hr> 
+                  <h3>Depth: ${restaurant.geometry.coordinates[2]} <br>
+                      Magnitude: ${restaurant.properties.mag}</h3>`)
 
+      restaurantMarkers.push(restaurantMarker)
+  }
+
+  createMap(L.layerGroup(restaurantMarkers))
+}
+
+d3.json(url).then(data => {console.log(data);}).then(createMap())
 
 // // Get data from url and call createMarkers
 // d3.csv(url).then(createMarkers)
