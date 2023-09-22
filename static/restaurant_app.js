@@ -33,27 +33,13 @@ function createMap(restaurants_layers) {
         div.style.borderRadius = '5px';
         div.style.boxShadow = '0 1px 5px rgba(0, 0, 0, 0.4)';
 
-        let types = ["Burger Joints",
-                    "Hot Dogs",
-                    "Ice Cream Shops",
-                    "Sandwich Shops",
-                    "Breakfast Spots",
-                    "Chicken Joints",
-                    "Pizza Shops",
-                    "Mexican Restaurants"];
+        let types = ["Blue Dot = Restaurant"];
 
-        let icons = ['map_icons/hamburger.png',
-                    'map_icons/hotdog.png',
-                    'map_icons/icecream.png',
-                    'map_icons/sandwich.png',
-                    'map_icons/breakfast.png',
-                    'map_icons/chicken.png',
-                    'map_icons/pizza.png',
-                    'map_icons/mexican.png'];
+        let icons = ["#33ff99"];
     
         // Loop through our intervals and generate a label with a colored square for each interval.
         for (let i = 0; i < types.length; i++) {
-          div.innerHTML +=  (" <img src="+ icons[i] +" height='20' width='20'>  " ) + types[i] +'<br>';
+          div.innerHTML +=  types[i] +'<br>';
         }
         return div;
       };
