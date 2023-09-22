@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "blast-text": "^2.0.0",
+    "hrjs": "^1.5.7"
+  }
+}

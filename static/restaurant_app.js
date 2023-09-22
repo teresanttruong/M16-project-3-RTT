@@ -20,3 +20,10 @@
 
 //Get data and call createMarkers
 
+function highlight() {
+  new HR("#db", {
+    highlight: "Food",
+    backgroundColor: "#B4FFEB"
+  }).hr()};
+
+highlight();

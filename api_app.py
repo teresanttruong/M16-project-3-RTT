@@ -4,28 +4,32 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from flask_sqlalchemy import SQLAlchemy 
 from flask import Flask, render_template
+from flask_cors import CORS
 import os.path
 
 
 #Database Setup
 engine = create_engine("sqlite:///data/restaurants.sqlite")
 
+
 # reflect an existing database into a new model
 Base = automap_base()
+
 # reflect the tables
 Base.prepare(autoload_with=engine)
-# Save references to each table
-# Restaurants = Base.classes.restaurants
+
 # Create our session (link) from Python to the DB
 session = Session(engine)
+
 
 
 #Flask Setup
 db = SQLAlchemy()
 
 app = Flask(__name__)
+CORS(app)
 
-db_name = "C:/Users/victo/Documents/Bootcamp/Week16/M16-project-3-RTT/data/restaurants.sqlite"
+db_name = "data/restaurants.sqlite"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, db_name)
 
@@ -57,6 +61,7 @@ class Restaurants(db.Model):
     websites = db.Column(db.String)
 
 
+
 #Flask Routes
 @app.route("/")
 def welcome():
@@ -69,29 +74,17 @@ def welcome():
     
 # @app.route("/map")
 # def map():
+#     markers = []
+#     return render_template('restaurant_map_index.html', markers=markers)
     
+#Display restaurants database
+#see restaurant_index.html for formatting of table   
 @app.route("/data")
-#Display restaurants database, creating a bullet point for each restaurant
-#see restaurant_index.html for formatting of table
 def data():
     restaurants = Restaurants.query.all()
-    return render_template('restaurant_data_index.html', restaurants=restaurants)
+    return render_template('restaurant_data_index.html', restaurants=restaurants)   
 
-    
-    # try:
-    #     restaurants = Restaurants.query.all()
-    #     restaurants_text = '<ul>'
-    #     for restaurant in restaurants:
-    #         restaurants_text += '<li>' + restaurant.id + ', ' + restaurant.dataAdded + ', ' + restaurant.dateUpdated + ', ' + restaurant.address + ', ' + restaurant.categories + ', ' + restaurant.primaryCategories + ', ' + restaurant.city + ', ' + restaurant.country + ', ' + restaurant.keys + ', ' + restaurant.latitude + ', ' + restaurant.longitude + ', ' + restaurant.name + ', ' + restaurant.postalCode + ', ' + restaurant.province + ', ' + restaurant.sourceURLs + ', ' + restaurant.websites + '</li>'
-    #     restaurants_text += '</ul>'
-    #     return restaurants_text
-    # except Exception as e:
-    #     # e holds description of the error
-    #     error_text = "<p>The error:<br>" + str(e) + "</p>"
-    #     hed = '<h1>Something is broken.</h1>'
-    #     return hed + error_text
-    
-    
+
 #Run app
 if __name__ == '__main__':
     app.run()
