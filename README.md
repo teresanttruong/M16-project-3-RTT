@@ -8,10 +8,12 @@ Food is essential to the human body for a multitude of reasons. Food acts as an 
 We have created an interactive dashboard that explores all the different types of Fast Food restaurants in the United States. The primary objective of this project is to analyze the amount of fast food types there are in America.
 
 ## Dataset
+    Datafiniti Fast Food Restaurants Across America --> https://www.kaggle.com/datasets/datafiniti/fast-food-restaurants?select=Datafiniti_Fast_Food_Restaurants_May19.csv
 
-## Research Areas
+## Application
 
 ## Findings
+
 
 ## Credit
 Help with code for reading sqlite database into Flask app: https://python-adv-web-apps.readthedocs.io/en/latest/flask_db2.html
